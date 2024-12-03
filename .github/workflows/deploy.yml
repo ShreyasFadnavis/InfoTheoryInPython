@@ -38,12 +38,11 @@ jobs:
       - name: Build static site
         run: |
           export PYTHONPATH=$PYTHONPATH:$(pwd)
-          python -m streamlit-static-render main.py --out-dir _site || {
-            echo "Static rendering failed. Check if all dependencies are installed correctly."
-            exit 1
-          }
-          mkdir -p _site/static
-          cp -r static/* _site/static/ || echo "No static files to copy"
+          mkdir -p _site/static/css
+          cp -r static/css/* _site/static/css/ || echo "No CSS files to copy"
+          streamlit run main.py --server.headless=true &
+          sleep 5
+          wget -r -P _site http://localhost:5000
           touch _site/.nojekyll
 
       - name: Upload artifact

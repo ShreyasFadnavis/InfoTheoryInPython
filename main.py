@@ -7,11 +7,18 @@ st.set_page_config(
 )
 
 def load_css():
+    """Load custom CSS styles with proper error handling."""
+    css_path = "static/css/style.css"
     try:
-        with open("static/css/style.css") as f:
+        with open(css_path) as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
     except FileNotFoundError:
-        st.warning("CSS file not found. Using default styles.")
+        st.warning(f"CSS file not found at {css_path}. Using default styles.")
+        # Ensure the directory exists for future deployments
+        os.makedirs(os.path.dirname(css_path), exist_ok=True)
+    except Exception as e:
+        st.error(f"Error loading CSS: {str(e)}")
+        st.warning("Using default styles.")
 
 load_css()
 
