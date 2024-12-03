@@ -1,4 +1,6 @@
 import streamlit as st
+import io
+from utils.notebook_generator import generate_notebook_download
 import numpy as np
 from utils.visualizations import plot_entropy
 from utils.examples import calculate_entropy
@@ -62,5 +64,19 @@ st.markdown("""
 Try to:
 1. Find the probability that gives maximum entropy
 2. Calculate entropy for very small probabilities
+
+# Add download button for notebook
+with open(__file__, 'r') as f:
+    chapter_content = f.read()
+
+notebook_content = generate_notebook_download(chapter_content, "Information Theory: Entropy")
+notebook_bytes = notebook_content.encode()
+
+st.download_button(
+    label="Download as Jupyter Notebook",
+    data=notebook_bytes,
+    file_name="entropy_chapter.ipynb",
+    mime="application/x-ipynb+json"
+)
 3. Observe how entropy changes as probability approaches 0 or 1
 """)

@@ -1,4 +1,6 @@
 import streamlit as st
+import io
+from utils.notebook_generator import generate_notebook_download
 import numpy as np
 from utils.visualizations import plot_channel
 from utils.examples import calculate_channel_capacity
@@ -60,5 +62,19 @@ st.markdown("""
 Try to:
 1. Find the capacity when p_error = 0.5
 2. Calculate capacity for very small error probabilities
+
+# Add download button for notebook
+with open(__file__, 'r') as f:
+    chapter_content = f.read()
+
+notebook_content = generate_notebook_download(chapter_content, "Information Theory: Channel Capacity")
+notebook_bytes = notebook_content.encode()
+
+st.download_button(
+    label="Download as Jupyter Notebook",
+    data=notebook_bytes,
+    file_name="channel_capacity_chapter.ipynb",
+    mime="application/x-ipynb+json"
+)
 3. Observe how capacity changes with different error probabilities
 """)
