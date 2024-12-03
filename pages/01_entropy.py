@@ -8,31 +8,43 @@ from utils.examples import calculate_entropy
 st.title("Chapter 1: Entropy and Information")
 
 st.markdown("""
-### Shannon Entropy
+### Introduction to Entropy
 
-The fundamental measure of information in information theory is entropy. For a discrete random
-variable X, the entropy H(X) measures the average amount of information contained in X.
+In information theory, entropy is a measure of the average amount of information contained in a message.
+The concept was introduced by Claude Shannon in his seminal 1948 paper "A Mathematical Theory of Communication".
 
-For a binary random variable with probability p of one outcome:
+#### Mathematical Definition
 
-$$
-H(p) = -p\log_2(p) - (1-p)\log_2(1-p)
-$$
+For a discrete random variable X with possible values {x₁, ..., xₙ} and probability mass function P(X),
+the entropy H(X) is defined as:
+
+H(X) = -∑P(x)log₂P(x)
+
+For a binary random variable (with probability p and 1-p), this simplifies to:
+
+H(p) = -p log₂(p) - (1-p)log₂(1-p)
 """)
 
-st.markdown("### Interactive Example: Binary Entropy")
+# Interactive Example
+st.markdown("### Interactive Example: Binary Entropy Function")
 
-# Interactive entropy calculation
+# Slider for probability
 p = st.slider("Select probability p:", 0.0, 1.0, 0.5, 0.01)
+
+# Calculate and display entropy
 entropy = calculate_entropy(p)
+st.write(f"Entropy H(p) = {entropy:.3f} bits")
 
-st.markdown(f"""
-The entropy for p = {p:.2f} is H(p) = {entropy:.4f} bits.
+# Plot entropy function
+st.pyplot(plot_entropy(p))
 
-Try the following code:
+# Code example
+st.markdown("### Python Implementation")
+st.markdown("""
+Here's how to calculate the entropy of a binary random variable:
 """)
 
-code = f"""
+code = """
 import numpy as np
 
 def calculate_entropy(p):
@@ -40,30 +52,22 @@ def calculate_entropy(p):
         return 0
     return -p * np.log2(p) - (1-p) * np.log2(1-p)
 
-# Calculate entropy for p = {p}
-entropy = calculate_entropy({p})
-print(f"Entropy: {{entropy:.4f}} bits")
+# Example usage
+p = 0.5
+entropy = calculate_entropy(p)
+print(f"Entropy for p={p}: {entropy:.3f} bits")
 """
 
-st.code(code, language='python')
-
-# Plot entropy function
-st.markdown("### Visualization of Binary Entropy Function")
-fig = plot_entropy(p)
-st.pyplot(fig)
+st.code(code, language="python")
 
 st.markdown("""
-### Properties of Entropy
-
-1. **Non-negativity**: H(X) ≥ 0
-2. **Maximum entropy**: For binary random variables, H(X) ≤ 1 bit
-3. **Concavity**: The entropy function is concave
-
-### Exercise
+### Exercises
 
 Try to:
 1. Find the probability that gives maximum entropy
 2. Calculate entropy for very small probabilities
+3. Observe how entropy changes as probability approaches 0 or 1
+""")
 
 # Add download button for notebook
 with open(__file__, 'r') as f:
@@ -78,5 +82,3 @@ st.download_button(
     file_name="entropy_chapter.ipynb",
     mime="application/x-ipynb+json"
 )
-3. Observe how entropy changes as probability approaches 0 or 1
-""")

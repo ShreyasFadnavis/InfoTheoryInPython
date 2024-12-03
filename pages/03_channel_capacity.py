@@ -8,60 +8,61 @@ from utils.examples import calculate_channel_capacity
 st.title("Chapter 3: Channel Capacity")
 
 st.markdown("""
-### Channel Capacity
+### Introduction to Channel Capacity
 
-Channel capacity is the maximum rate at which information can be reliably transmitted over a
-communication channel. For a binary symmetric channel (BSC), the capacity is:
+Channel capacity is the maximum rate at which information can be reliably transmitted over a communication channel.
+We'll focus on the binary symmetric channel (BSC) as a simple example.
 
-$$
-C = 1 - H(p)
-$$
+#### Mathematical Definition
 
-where p is the probability of error, and H(p) is the binary entropy function.
+For a binary symmetric channel with error probability p, the capacity C is:
+
+C = 1 + p log₂(p) + (1-p)log₂(1-p)
+
+where p is the probability of bit flip (error) during transmission.
 """)
 
+# Interactive Example
 st.markdown("### Interactive Example: Binary Symmetric Channel")
 
-# Interactive channel capacity calculation
+# Slider for error probability
 p_error = st.slider("Select error probability:", 0.0, 0.5, 0.1, 0.01)
+
+# Display channel diagram
+st.plotly_chart(plot_channel(p_error))
+
+# Calculate and display capacity
 capacity = calculate_channel_capacity(p_error)
+st.write(f"Channel Capacity = {capacity:.3f} bits/transmission")
 
-st.markdown(f"""
-The channel capacity for error probability p = {p_error:.2f} is C = {capacity:.4f} bits.
-
-Try the following code:
+# Code example
+st.markdown("### Python Implementation")
+st.markdown("""
+Here's how to calculate the capacity of a binary symmetric channel:
 """)
 
-code = f"""
+code = """
 import numpy as np
 
 def calculate_channel_capacity(p_error):
     return 1 + p_error * np.log2(p_error) + (1-p_error) * np.log2(1-p_error)
 
-# Calculate capacity for p_error = {p_error}
-capacity = calculate_channel_capacity({p_error})
-print(f"Channel Capacity: {{capacity:.4f}} bits")
+# Example usage
+p_error = 0.1
+capacity = calculate_channel_capacity(p_error)
+print(f"Channel Capacity: {capacity:.3f} bits/transmission")
 """
 
-st.code(code, language='python')
-
-# Visualize channel
-st.markdown("### Visualization of Binary Symmetric Channel")
-fig = plot_channel(p_error)
-st.plotly_chart(fig)
+st.code(code, language="python")
 
 st.markdown("""
-### Properties of Channel Capacity
-
-1. **Maximum at p=0**: Capacity is maximum (1 bit) when there are no errors
-2. **Minimum at p=0.5**: Capacity is 0 when the channel is completely random
-3. **Symmetry**: C(p) = C(1-p)
-
-### Exercise
+### Exercises
 
 Try to:
 1. Find the capacity when p_error = 0.5
 2. Calculate capacity for very small error probabilities
+3. Observe how capacity changes with different error probabilities
+""")
 
 # Add download button for notebook
 with open(__file__, 'r') as f:
@@ -76,5 +77,3 @@ st.download_button(
     file_name="channel_capacity_chapter.ipynb",
     mime="application/x-ipynb+json"
 )
-3. Observe how capacity changes with different error probabilities
-""")

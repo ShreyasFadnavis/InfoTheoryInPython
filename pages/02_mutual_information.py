@@ -8,43 +8,43 @@ from utils.examples import calculate_mutual_information
 st.title("Chapter 2: Mutual Information")
 
 st.markdown("""
-### Mutual Information
+### Introduction to Mutual Information
 
-Mutual Information (MI) measures the mutual dependence between two variables. It quantifies the
-amount of information obtained about one random variable by observing another random variable.
+Mutual Information (MI) measures the mutual dependence between two variables.
+It quantifies the amount of information obtained about one random variable by observing another random variable.
 
-For random variables X and Y:
+#### Mathematical Definition
 
-$$
-I(X;Y) = \sum_{x,y} p(x,y) \log_2 \\frac{p(x,y)}{p(x)p(y)}
-$$
+For two random variables X and Y, the mutual information I(X;Y) is defined as:
+
+I(X;Y) = ∑∑P(x,y)log₂(P(x,y)/(P(x)P(y)))
+
+where P(x,y) is the joint probability distribution, and P(x) and P(y) are the marginal distributions.
 """)
 
-st.markdown("### Interactive Example: Mutual Information")
+# Interactive Example
+st.markdown("### Interactive Example: Joint Distribution")
 
-# Create interactive joint probability matrix
+# Create a 2x2 joint distribution matrix
 st.markdown("Adjust the joint probability distribution:")
-col1, col2 = st.columns(2)
+p00 = st.slider("P(X=0,Y=0):", 0.0, 1.0, 0.25, 0.01)
+p01 = st.slider("P(X=0,Y=1):", 0.0, 1.0-p00, 0.25, 0.01)
+p10 = st.slider("P(X=1,Y=0):", 0.0, 1.0-p00-p01, 0.25, 0.01)
+p11 = 1.0 - p00 - p01 - p10
 
-with col1:
-    p00 = st.slider("P(X=0,Y=0):", 0.0, 1.0, 0.25, 0.01)
-    p01 = st.slider("P(X=0,Y=1):", 0.0, 1.0, 0.25, 0.01)
+joint_prob = np.array([[p00, p01], [p10, p11]])
 
-with col2:
-    p10 = st.slider("P(X=1,Y=0):", 0.0, 1.0, 0.25, 0.01)
-    p11 = st.slider("P(X=1,Y=1):", 0.0, 1.0, 0.25, 0.01)
+# Display the distribution
+st.plotly_chart(plot_joint_distribution(joint_prob))
 
-# Normalize probabilities
-total = p00 + p01 + p10 + p11
-joint_prob = np.array([[p00/total, p01/total], 
-                      [p10/total, p11/total]])
-
+# Calculate and display MI
 mi = calculate_mutual_information(joint_prob)
+st.write(f"Mutual Information I(X;Y) = {mi:.3f} bits")
 
-st.markdown(f"""
-The mutual information for this joint distribution is: {mi:.4f} bits
-
-Try the following code:
+# Code example
+st.markdown("### Python Implementation")
+st.markdown("""
+Here's how to calculate mutual information from a joint probability distribution:
 """)
 
 code = """
@@ -62,27 +62,23 @@ def calculate_mutual_information(joint_prob):
             if joint_prob[i,j] > 0:
                 mi += joint_prob[i,j] * np.log2(joint_prob[i,j] / (p_x[i] * p_y[j]))
     return mi
+
+# Example usage
+joint_prob = np.array([[0.25, 0.25], [0.25, 0.25]])
+mi = calculate_mutual_information(joint_prob)
+print(f"Mutual Information: {mi:.3f} bits")
 """
 
-st.code(code, language='python')
-
-# Visualize joint distribution
-st.markdown("### Visualization of Joint Distribution")
-fig = plot_joint_distribution(joint_prob)
-st.plotly_chart(fig)
+st.code(code, language="python")
 
 st.markdown("""
-### Properties of Mutual Information
-
-1. **Non-negativity**: I(X;Y) ≥ 0
-2. **Symmetry**: I(X;Y) = I(Y;X)
-3. **Relationship with entropy**: I(X;Y) = H(X) - H(X|Y)
-
-### Exercise
+### Exercises
 
 Try to:
 1. Create independent variables (MI should be 0)
 2. Create perfectly correlated variables (maximum MI)
+3. Observe how MI changes with different probability distributions
+""")
 
 # Add download button for notebook
 with open(__file__, 'r') as f:
@@ -97,5 +93,3 @@ st.download_button(
     file_name="mutual_information_chapter.ipynb",
     mime="application/x-ipynb+json"
 )
-3. Observe how MI changes with different probability distributions
-""")
