@@ -8,7 +8,7 @@ st.set_page_config(
 
 def load_css():
     try:
-        with open("static/style.css") as f:
+        with open("static/css/style.css") as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
     except FileNotFoundError:
         st.warning("CSS file not found. Using default styles.")
