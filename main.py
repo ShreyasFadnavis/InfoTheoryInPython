@@ -14,6 +14,8 @@ st.set_page_config(
 )
 
 # Initialize session state
+init_session_state()
+
 # Authentication UI in sidebar
 with st.sidebar:
     if st.session_state.user:
@@ -49,8 +51,6 @@ with st.sidebar:
                     st.success("Registration successful! Please login.")
                 else:
                     st.error("Email already registered")
-
-init_session_state()
 
 def load_css():
     with open("style.css") as f:
