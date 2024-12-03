@@ -1,13 +1,9 @@
 import streamlit as st
 import io
 from utils.notebook_generator import generate_notebook_download
-from progress_tracker import track_chapter_visit, mark_chapter_completed, track_exercise_attempt
-from auth import require_auth
 import numpy as np
 from utils.visualizations import plot_entropy
 from utils.examples import calculate_entropy
-# Track chapter visit
-track_chapter_visit("01_entropy")
 
 
 st.title("Chapter 1: Entropy and Information")
@@ -67,28 +63,6 @@ st.code(code, language="python")
 
 st.markdown("""
 ### Exercises
-
-# Exercise tracking
-if require_auth():
-    st.markdown("### Track Your Progress")
-    exercise1 = st.checkbox("I found the probability that gives maximum entropy")
-    exercise2 = st.checkbox("I calculated entropy for very small probabilities")
-    exercise3 = st.checkbox("I observed entropy changes near 0 and 1")
-    
-    if st.button("Save Progress"):
-        # Track each exercise
-        track_exercise_attempt("01_entropy", "max_entropy", exercise1)
-        track_exercise_attempt("01_entropy", "small_prob", exercise2)
-        track_exercise_attempt("01_entropy", "edge_cases", exercise3)
-        
-        # Calculate completion percentage
-        completed_exercises = sum([exercise1, exercise2, exercise3])
-        score = (completed_exercises / 3) * 100
-        
-        # Mark chapter progress
-        if completed_exercises > 0:
-            mark_chapter_completed("01_entropy", score)
-            st.success(f"Progress saved! Completion: {score:.1f}%")
 
 Try to:
 1. Find the probability that gives maximum entropy
